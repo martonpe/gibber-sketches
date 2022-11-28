@@ -1,7 +1,5 @@
 r = Reverb({ wet2: 0.1 }).bus().connect();
-dl = Delay({ time: 3 / 8 })
-  .bus()
-  .connect(r);
+dl = Delay({ time: 3 / 8 }).bus().connect(r);
 ds = Delay({ time: 1 / 60, feedback: 0.9 }).connect(dl);
 td = Sampler("http://127.0.0.1:8080/teardrops.mp3", { loudness: 0.1 });
 sp = Sampler("http://127.0.0.1:8080/spacetime.mp3", { loops: true });
@@ -66,8 +64,4 @@ s0.init({ src: canvas });
 osc(6, 0.03, 2).out(o1);
 src(s0).out(o0);
 src(s0).out(o2);
-src(o0)
-  .modulateHue(src(o0).scale(1.002).kaleid(10), 100)
-  .blend(src(o2), () => 1 - sp.out(12))
-  .blend(src(o1), 0.02)
-  .out();
+src(o0).modulateHue(src(o0).scale(1.002).kaleid(10), 100).blend(src(o2), () => 1 - sp.out(12)).blend(src(o1), 0.02).out();
