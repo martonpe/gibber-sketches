@@ -1,30 +1,3 @@
-// register WebMIDI
-navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
-
-function onMIDISuccess(midiAccess) {
-  console.log(midiAccess);
-  var inputs = midiAccess.inputs;
-  var outputs = midiAccess.outputs;
-  for (var input of midiAccess.inputs.values()) {
-    input.onmidimessage = getMIDIMessage;
-  }
-}
-
-function onMIDIFailure() {
-  console.log("Could not access your MIDI devices.");
-}
-
-//create an array to hold our cc values and init to a normalized value
-var cc = Array(128).fill(0.5);
-
-getMIDIMessage = function (midiMessage) {
-  var arr = midiMessage.data;
-  var index = arr[1];
-  //console.log('Midi received on cc#' + index + ' value:' + arr[2])    // uncomment to monitor incoming Midi
-  var val = (arr[2] + 1) / 128.0; // normalize CC values to 0.0 - 1.0
-  cc[index] = val;
-};
-
 // p5.glitch v0.1.3
 // cc teddavis.org 2021
 class Glitch{
@@ -583,5 +556,13 @@ class Glitch{
 // --- //
 eval(Glitch.toString() + ";window.cc=cc;window.Glitch=Glitch");
 
+removeVideos = function(){
+	videos = document.getElementsByTagName('video')
+	while(videos.length > 0){
+	  videos[0].remove()
+	  videos = document.getElementsByTagName('video')
+	}
+  }
+  
 use("p5")
 use("hydra").then((init) => init());
