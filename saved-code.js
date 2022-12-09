@@ -554,15 +554,35 @@ class Glitch{
 	}
 }
 // --- //
-eval(Glitch.toString() + ";window.cc=cc;window.Glitch=Glitch");
+eval(Glitch.toString() + ";window.Glitch=Glitch");
 
-removeVideos = function(){
-	videos = document.getElementsByTagName('video')
-	while(videos.length > 0){
-	  videos[0].remove()
-	  videos = document.getElementsByTagName('video')
-	}
+
+removeAllVideos = function () {
+  vids = []
+  videos = document.getElementsByTagName("video");
+  while (videos.length > 0) {
+    videos[0].remove();
+    videos = document.getElementsByTagName("video");
   }
+};
+
+let vid
+loadVideo = function (num) {
+  removeAllVideos()
+  vid = createVideo("http://127.0.0.1:8080/technosexual/vid" + num + ".mp4", () => {
+      vid.loop();
+      vid.hide();
+      vid.volume(0);
+  })
+};
+
+googleFont = function(fontName) {
+	let link = document.createElement("link")
+	link.href = "https://fonts.googleapis.com/css?family=" + encodeURI(fontName) + '&display=swap'
+	link.rel = "stylesheet"
+	document.head.appendChild(link)
+	return fontName
+}
   
 use("p5")
 use("hydra").then((init) => init());
