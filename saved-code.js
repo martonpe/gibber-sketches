@@ -583,6 +583,15 @@ googleFont = function(fontName) {
 	document.head.appendChild(link)
 	return fontName
 }
+
+fibs = [1,1]
+initFibs = function() {
+  for(let i = 0; i < 25; i++) {
+		fibLen = fibs.length
+  	fibs.push(fibs[fibLen-1] + fibs[fibLen-2])  
+  }
+}
+initFibs()
   
 use("p5")
 use("hydra").then((init) => init());
