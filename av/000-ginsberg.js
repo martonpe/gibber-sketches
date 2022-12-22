@@ -43,7 +43,3 @@ siren.fadeout()
 siren.gain = .5
  
 //TODO: bring in some visual element with siren
-
-people = Sampler('http://127.0.0.1:8080/people.wav', { loops: true })
-people.note(.5)
-people.note(1)
