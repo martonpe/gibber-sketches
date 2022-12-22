@@ -1,6 +1,3 @@
-use("p5");
-use("hydra").then((init) => init());
-
 vid = createVideo("http://127.0.0.1:8080/porn-1.mp4", () => {
   vid.loop();
   vid.volume(0);
