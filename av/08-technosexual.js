@@ -1,12 +1,12 @@
 Clock.bpm = 140
-ts = Sampler('http://127.0.0.1:8080/technosexual/technosexual.mp3', { gain: 2 })
-p = Sampler('http://127.0.0.1:8080/technosexual/productive.mp3', { loops: true, gain: 2 })
-m = Sampler('http://127.0.0.1:8080/technosexual/moans.mp3', { loops: true, gain: 1 })
+technosexual = Sampler('http://127.0.0.1:8080/technosexual/technosexual.mp3', { gain: 2 })
+productive = Sampler('http://127.0.0.1:8080/technosexual/productive.mp3', { loops: true, gain: 2 })
+sex = Sampler('http://127.0.0.1:8080/technosexual/moans.mp3', { loops: true, gain: 1 })
 r = Reverb({ wet2: 0.1 }).bus().connect();
 dl = Delay({ time: 3 / 8 }).bus().connect(r);
 ds = Delay({ time: 1 / 100, feedback: 0.9 }).connect(r);
-ts.connect(dl, 0.1).connect(r, .6)
-p.connect(dl, 0.4).connect(r, .5)
+technosexual.connect(dl, 0.1).connect(r, .6)
+productive.connect(dl, 0.4).connect(r, .5)
  
 rave = Sampler('http://127.0.0.1:8080/technosexual/rave2.mp3')
 k = Sampler('http://127.0.0.1:8080/technosexual/kick1.mp3')
@@ -44,7 +44,7 @@ webgl = createGraphics(width, height, WEBGL)
 webgl.noStroke()
  
 hh = Hat()
-p.note(.9)
+productive.note(.9)
 
 k.note.seq( 1, 1/4 )
 k.stop()
@@ -53,14 +53,14 @@ rave.stop()
 hh.trigger.seq( 1, 1/16 )
 hh.stop()
 
-m.note(.8)
-m.gain.fade(2,4,4)
-m.fadeout(8)
+sex.note(.8)
+sex.gain.fade(2,4,4)
+sex.fadeout(8)
 
 p.fadeout(4)
 
-ts.note(1)
-ts.fadeout()
+technosexual.note(1)
+technosexual.fadeout()
 
 effectLevel = 10
 div = 2

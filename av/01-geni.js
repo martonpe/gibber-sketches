@@ -1,6 +1,6 @@
-images = [];
+genitals = [];
 for (i = 0; i < 10; i++) {
-  images[i] = loadImage("http://127.0.0.1:8080/geni" + i + ".png");
+  genitals[i] = loadImage("http://127.0.0.1:8080/geni" + i + ".png");
 }
 
 r = Reverb().bus();
@@ -22,7 +22,7 @@ draw = function () {
       y = rndi(height);
       translate(x, y);
       rotate(rndf(PI));
-      image(images[i], 0, 0, s.out(4000), s.out(4000));
+      image(genitals[i], 0, 0, s.out(4000), s.out(4000));
     }
   }
   if (s.out() < 0.01) {

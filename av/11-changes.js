@@ -1,20 +1,20 @@
-changes = Sampler('http://127.0.0.1:8080/changes.wav', { gain: 2})
+changes = Sampler('http://127.0.0.1:8080/changes.mp3', { gain: 2})
  
 changes.note(1)
 
 imageMode(CENTER)
 flowers = [];
 hdri = [];
-sounds = [];
+ambiences = [];
 for (i = 0; i < 9; i++) {
   flowers[i] = loadImage("http://127.0.0.1:8080/flower" + i + ".png");
   hdri[i] = loadImage("http://127.0.0.1:8080/hdri/" + i + ".jpg");
-  sounds[i] = Sampler("http://127.0.0.1:8080/hdri/" + i + ".wav", {loops: true, gain: 0})
+  ambiences[i] = Sampler("http://127.0.0.1:8080/hdri/" + i + ".wav", {loops: true, gain: 0})
 }
 
 for (i = 0; i < 9; i++) {
-  sounds[i].gain = 0
-  sounds[i].note(1)
+  ambiences[i].gain = 0
+  ambiences[i].note(1)
 }
 
 webgl = createGraphics(width, height, WEBGL)
@@ -22,24 +22,24 @@ webgl.noStroke()
 flowerNo = 0
 hdriNo = 0
 soundNo = 0
-sounds[soundNo].gain.fade(0,1,1)
+ambiences[soundNo].gain.fade(0,1,1)
 
 draw = function(){
   if(frameCount%100==0){
     flowerNo = rndi(flowers.length-1)
   }
   if(frameCount%300==0){
-    sounds[soundNo].gain.fade(1,0,1)
+    ambiences[soundNo].gain.fade(1,0,1)
     hdriNo = soundNo = soundNo + 1
     if(soundNo>8){ soundNo = 0; hdriNo = 0 }
-    sounds[soundNo].gain.fade(0,1,1)
+    ambiences[soundNo].gain.fade(0,1,1)
   }
   webgl.clear()
   webgl.texture(hdri[hdriNo])
   webgl.sphere(1000)
   
  	webgl.rotateX(changes.out(.05))
- 	webgl.rotateY(changes.out(.1) + sounds[soundNo].out(.5))
+ 	webgl.rotateY(changes.out(.1) + ambiences[soundNo].out(.5))
 	
   webgl.push()
   webgl.texture(flowers[flowerNo])

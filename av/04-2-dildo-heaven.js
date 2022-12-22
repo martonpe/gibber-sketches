@@ -8,12 +8,12 @@ dildos = [
 ]
  
 heaven = Sampler('http://127.0.0.1:8080/heaven.mp3', {gain: 2})
-d1 = Sampler('http://127.0.0.1:8080/drone1.mp3', {loops: true, gain: 1.5})
+drone = Sampler('http://127.0.0.1:8080/drone.mp3', {loops: true, gain: 1.5})
  
 heaven.trigger(1)
  
-d1.note(1)
-d1.fadein()
+drone.note(1)
+drone.fadein()
  
 move = Sine({frequency: 100, gain:0}).connect()
  

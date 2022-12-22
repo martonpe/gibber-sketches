@@ -1,8 +1,8 @@
-images = [];
-sounds = [];
+flowers = [];
+moans = [];
 for (i = 0; i < 9; i++) {
-  images[i] = loadImage("http://127.0.0.1:8080/flower" + i + ".png");
-	sounds[i] = "http://127.0.0.1:8080/moans/moan" + i + ".mp3"
+  flowers[i] = loadImage("http://127.0.0.1:8080/flower" + i + ".png");
+	moans[i] = "http://127.0.0.1:8080/moans/moan" + i + ".mp3"
 }
  
 r = Reverb().bus();
@@ -11,7 +11,7 @@ s.attack = 0
 s.note.seq( notes = [0, -3, -14, 1, -10, -4, 13, -6], [1/8,1/16].rnd() ).connect(r,.5)
   
 m =  Sampler({
-  files: sounds,
+  files: moans,
 	gain: .5
 })
 m.connect(r,.5)
@@ -31,7 +31,7 @@ draw = function () {
       s1 = rndi(200,400)
       translate(x, y);
       rotate(rndf(PI));
-      image(images[iNo], 0, 0, s1, s1)
+      image(flowers[iNo], 0, 0, s1, s1)
   }
   if (s.__out < 0.01) {
     iNo = undefined;
