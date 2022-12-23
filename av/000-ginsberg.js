@@ -1,18 +1,18 @@
-verb  = Reverb({roomSize: .2} ).bus()
-rLong  = Reverb().bus()
-delay = Delay( '1/3' ).bus().connect( rLong, .5 )
+rs = Reverb({roomSize: .2} ).bus()
+r = Reverb().bus()
+d13 = Delay( '1/3' ).bus().connect( r, .5 )
  
 background(0)
+
+
 perc = FM( 'perc')
-  .spread(.975)
-perc.connect( delay, .5 )
+perc.connect( d13, .5 )
 perc.note.seq( sine( btof(7),7,7 )       , 1/8,  2 )
-perc.pan = lfo('square',btof(2),1,0)
 
 beat = Sampler('http://127.0.0.1:8080/tape/beat.mp3', { loops: true })
 beat.rate.seq([1, 1/79, 1/64, 15].rnd(), [1/4,1/6].rnd())
-beat.connect(verb, .9)
-beat.connect(rLong, .9)
+beat.connect(rs, .9)
+beat.connect(r, .9)
 beat.note(.8)
 
 birds = Sampler('http://127.0.0.1:8080/birds.mp3', { loops: true })
@@ -20,11 +20,11 @@ birds.note(.2)
 
 bubbles = Sampler('http://127.0.0.1:8080/bubbles.mp3', { loops: true })
 bubbles.note(.6)
-bubbles.connect(verb, 1)
+bubbles.connect(rs, 1)
 
 ginsberg = Sampler('http://127.0.0.1:8080/ginsberg.mp3', { gain: 10 })
 ginsberg.note(1)
-ginsberg.connect(verb, .8)
+ginsberg.connect(rs, .8)
 ginsberg.gain = 10
 
 dS = Delay({time:1/32, feedback: .9, })

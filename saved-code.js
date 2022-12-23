@@ -567,13 +567,14 @@ removeAllVideos = function () {
 };
 
 let vid
-loadVideo = function (num) {
+loadVideo = function (url) {
   removeAllVideos()
-  vid = createVideo("http://127.0.0.1:8080/technosexual/vid" + num + ".mp4", () => {
+  vid = createVideo(url, () => {
       vid.loop();
       vid.hide();
       vid.volume(0);
   })
+  return vid
 };
 
 googleFont = function(fontName) {

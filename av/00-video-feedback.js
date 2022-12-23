@@ -1,68 +1,48 @@
-vid = createVideo("http://127.0.0.1:8080/porn-1.mp4", () => {
-  vid.loop();
-  vid.volume(0);
-  vid.hide();
+porn = createVideo("http://127.0.0.1:8080/porn1.mp4", () => {
+  porn.loop();
+  porn.volume(0);
+  porn.hide();
 });
+r = Reverb().bus();
+rs = Reverb({roomSize: .2} ).bus()
+d13 = Delay('1/3').bus();
 imageMode(CENTER);
 
-f = FM("glockenspiel", { decay: 1 / 8 });
-f.note.seq((p = [-10, -9, -8, -10]), [1/16, 1/16, 1/16, 2]);
-f.stop();
+b = FM[2]("deepbass", { decay: 1/8, gain:2 }).connect(r, 0.1);
+b.note.seq((bp = [-23]), 1/8);
+b.stop()
 
-p.set.seq( [[-10, -9, -2],[-10, -9, -8, -2],[-10, -9, -8, -4],[-10, -9, -6]], 2 );
+bp.transpose.seq([1,1,1,1,1,-1,-1,-1,-1,-1,-1,-1,1], 4)
 
-p.transpose(-5);
-b = FM("deepbass", { attack: 1 / 4 });
-b.attack = 0;
-b.note.seq((bp = [-1]), 1 / 8);
-bp.set.seq( [[2, 4],[0, 5],[10, -2, 13, 20]], 1 );
+f = FM("glockenspiel", { decay: 1 / 16 });
+f.connect(r, 1);
+f.connect(d13, 1);
+f.note.seq((p = [-10, -9, -8, -10]), [1/16, 1/16, 1/16, 2-1/16]);
 
-b.gain = 1;
-b.connect(r, 0.5);
+p.set.seq( [[-10, -9, -8, -2],[-10, -9, -7, -1],[-10, -8, -0, -6]], 2 );
 
-r = Reverb().bus();
-d = Delay({ time: 2 / 6, feedback: 0.2 }).bus();
+f.note.seq((p = [-10, -9, -8, -10]), [1/16, 1/16, 1/16, 1/8, 1/16]);
 
-f.connect(r, 0.5);
-f.connect(d, 0.5);
-
-s = FM("glockenspiel", { decay: 1 / 16 });
-s.note.tidal("-10 -1 [0 -1]*2");
-s.connect(r, 1);
-
-s.gain = 0.5;
-s.fadein();
-
-b.fadeout();
+s = Sine({frequency: 100, gain:0}).connect()
+s.frequency.fade(100,1000,32)
+s.gain.fade(0,.5,32)
+s.frequency.fade(1000,100,32)
+s.gain.fade(0.5,0,32)
 
 draw = function () {
-  background(0);
-  //  translate(mouseX, mouseY);
-  image(vid, 0, 0, vid.width, vid.height);
+  image(porn, width/2, height/2, width, height);
 };
 
 s0.init({ src: canvas });
-src(s0).out();
+src(s0).out()
+src(s0).out(o1);
 canvas.style.display = "none";
 
-//stretch
-src(o0)
-  .scale(() => 1 + 0.004 * cc[30])
-  .out();
-
-//rotate into a vortex
-src(o0).scale(1.002).rotate(0.01).blend(src(o1), 0, 2).out();
+//rotate
+src(o0).scale(1.05).rotate(0.01).blend(src(o1), ()=>1.5-f.out(20000)+c.out(2)).out();
 
 //holy dick - nice to play with moving too
-src(s0).out();
-src(s0).out(o1);
-src(o0).scale(1.0).blend(src(o1).color(1), 0.2).out();
-
-// or even holier
-src(o0).scale(1.1).blend(src(o1).color(1), b.out(7)).out();
+src(o0).scale(1.0).blend(src(o1), ()=>1.5+f.out(s.out(60))+c.out(2)).out();
 
 // rainbow trail
-src(o0).scale(1.04).hue(1.1).blend(src(o1).color(1), 0.2).out();
-
-// crazy digital color mindfuck
-src(o0).hue(1.01).out();
+src(o0).scale(1.04).hue(0.1).blend(src(o1), ()=>0.1+f.out(8)+c.out(2)).out();
