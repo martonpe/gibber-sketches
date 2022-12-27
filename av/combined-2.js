@@ -1,11 +1,7 @@
 //SAMPLES
 ambiences = [];
 for (i = 0; i < 9; i++) {
-    ambiences[i] = Sampler("http://127.0.0.1:8080/hdri/" + i + ".wav", {loops: true, gain: 0})
-}
-for (i = 0; i < 9; i++) {
-	ambiences[i].gain = 0
-	ambiences[i].note(1)
+    ambiences[i] = Sampler("http://127.0.0.1:8080/hdri/" + i + ".wav")
 }
 drone = Sampler('http://127.0.0.1:8080/drone1.mp3', { loops: true })
 rave = Sampler('http://127.0.0.1:8080/technosexual/rave2.mp3',  { gain: 1.5 })
@@ -13,20 +9,20 @@ k = Sampler('http://127.0.0.1:8080/technosexual/kick1.mp3')
 spacetime = Sampler("http://127.0.0.1:8080/spacetime.mp3", { loops: true, gain: 3 });
 loop92 = Sampler('http://127.0.0.1:8080/metatron/92.wav', { gain: 3 })
 loop93 = Sampler('http://127.0.0.1:8080/metatron/93.mp3', { gain: 3 })
-technosexual = Sampler('http://127.0.0.1:8080/technosexual/technosexual.mp3', { gain: 2 })
-productive = Sampler('http://127.0.0.1:8080/technosexual/productive.mp3', { loops: true, gain: 2 })
+technosexual = Sampler('http://127.0.0.1:8080/technosexual/technosexual.mp3', { gain: 1.8 })
+productive = Sampler('http://127.0.0.1:8080/technosexual/productive.mp3', { loops: true, gain: 1.5 })
 sex = Sampler('http://127.0.0.1:8080/technosexual/moans.mp3', { loops: true, gain: 1.5 })
 rave = Sampler('http://127.0.0.1:8080/technosexual/rave2.mp3')
 k = Sampler('http://127.0.0.1:8080/technosexual/kick1.mp3')
 acid = Sampler('http://127.0.0.1:8080/acid2.wav', {gain: 3})
-losing1 = Sampler('http://127.0.0.1:8080/losing.mp3', { loops: true, gain: 1.5})
-losing2 = Sampler('http://127.0.0.1:8080/losing2.mp3', { loops: true })
+losing1 = Sampler('http://127.0.0.1:8080/losing1.wav', { loops: true, gain: 1.5})
+losing2 = Sampler('http://127.0.0.1:8080/losing2.mp3', { loops: true, gain: 2.5})
 relax = Sampler('http://127.0.0.1:8080/relax1.mp3', { gain: 3 })
 relax2 = Sampler('http://127.0.0.1:8080/relax3.mp3', { gain: 3 })
 relax3 = Sampler('http://127.0.0.1:8080/relax4.mp3', { gain: 3 })
 relax4 = Sampler('http://127.0.0.1:8080/relax5.mp3', { gain: 3 })
 // the long ones
-changes = Sampler('http://127.0.0.1:8080/changes.mp3', { gain: 2})
+changes = Sampler('http://127.0.0.1:8080/changes.mp3', { gain: 2.5})
  
  
 //EFFECTS
@@ -38,9 +34,8 @@ dS = Delay({time:1/100000, feedback: .9, })
  
 spacetime.connect(d38, 0.8);
 drone.connect(r);
-losing2.connect(d38, .7).connect(r)
 losing1.connect(r)
-technosexual.connect(r, .3)
+technosexual.connect(r, .1)
 productive.connect(d38, 0.1).connect(r, .3)
  
  
@@ -93,7 +88,7 @@ glitch = new Glitch()
 glitch.loadType('jpg')
 glitch.loadQuality(.3)
 glitch.errors(false)
-pix = 100
+pix = 0
 pixelEffect = function(vid, on){
   vid.loadPixels();
   	color = {r: rndi(255), g: 0, b: rndi(155)}
@@ -114,6 +109,12 @@ textAlign(CENTER, CENTER)
 pg.textSize(250)
 textSize(250)
 fill(255,0,0)
+fade = 0
+iFade = 0
+fadeFunc = function(){
+	background(0,fade)
+	fade += iFade
+}
  
  
 //SHADERS
@@ -199,6 +200,7 @@ fragShader = `
 //08 cloud drone
 ////////////////////////////////////
 drone.note(1)
+drone.gain.fade(0,1,12)
 
 draw = function () {
   webgl.clear();
@@ -222,10 +224,6 @@ f.note.seq([4, 0, -3, 4, 11], [3, 2, 1/8].rnd());
 s = Synth("bleep", { decay: 1/8, attack: 1/24, glide: 2000 }).connect(d38, 0.7);
 s.seq((pp = [0, 2, -8, 14]), [1 / 8, 1, 2, 1/16, 1/16].rnd());
 pp.transpose.seq([12, -12, -12, 12], 4);
-
-p = FM("perc").connect(d38, 0.2);
-p.gain.seq([0.1, 0.1, 0.7, 0.1].rnd(), 1/8);
-p.note.seq([10, 0], [1/8, 1/16, 1/8, 1/8, 1/16], 1);
 
 spacetime.note(-1);
 
@@ -294,7 +292,7 @@ stroke(0)
 
 draw = function () {
     x = map(noise(frameCount * .004),0,1,-200, width+300)
-    y = map(noise(frameCount * .006),0,1,-200, width+300)
+    y = map(noise(frameCount * .006),0,1,-200, height+300)
     translate(x, y);
     fill(255)
     b = f.out(200);
@@ -307,7 +305,7 @@ draw = function () {
   speedY = sin(frameCount * .028)
   
   x = map(noise(frameCount * .004),0,1,-200, width+300)
-	y = map(noise(frameCount * .006),0,1,-200, width+300)
+  y = map(noise(frameCount * .006),0,1,-200, height+300)
   translate(x, y);
   const b = 3 + f.out(150);
   if(frameCount%2000>1000){
@@ -323,10 +321,9 @@ draw = function () {
 };
 
 ////////////////////////////////////
-//11 grinder doomhole
+//11 grindr doomhole
 ////////////////////////////////////
 s2.initScreen();
-losing1.trigger(1)
 f.stop()
 resetHydra()
 s = Synth('blank', { waveform:'square' }).note.seq( 12, 1 )
@@ -339,6 +336,7 @@ webgl.rotateY(1)
 webgl.translate(500,0,0)
 direction = -3
 counter = 0
+var i
 draw = function () {
   counter++
   if(counter%480==0){
@@ -346,8 +344,14 @@ draw = function () {
   }
   webgl.clear();
   pg.drawingContext.drawImage(hydra.canvas, 0, 0, pg.width, pg.height);
-  if(s.out()>.2){
-		pg.image(grindr[rndi(grindr.length-1)], width/2, height/2)
+  if(s.out()>.1 && i === undefined){
+    i = rndi(11)
+  }
+  if(s.out()<.1) {
+    i = undefined
+  }
+	if(i){
+    pg.image(grindr[i], width/2, height/2)
   }
   webgl.texture(pg);
   
@@ -357,6 +361,8 @@ draw = function () {
   
   image(webgl, width/2, height/2)
 };
+
+losing1.trigger(1)
 
 losing2.trigger(1)
 
@@ -369,7 +375,7 @@ losing2.fadeout()
 acid.note.seq(1,1)
 hh = Hat({ gain: 0.1, tune: 0.7 }).connect(r, .3)
 canvas.style.display = "none";
-mod = .1
+mod = .05
 draw = function () {
     glitch.loadImage(smiley)
   	glitch.replaceByte(acid.out(7500), 154)
@@ -378,7 +384,7 @@ draw = function () {
   	image(glitch.image, width-width/4, height/2, height, height);  
     image(smiley, rndi(width), rndi(height), 1+hh.out(1000), 1+hh.out(1000))
 };
-src(s0).modulate(src(s1),mod).out();
+src(s0).modulate(src(s1),()=>mod).out();
 
 hh.gain.seq([0.2, 0.2, 0.2, 0.2, 0.4, 0.2].rnd(), 1/16);
 hh.trigger.seq(1, 1/16);
@@ -391,7 +397,6 @@ s.note.seq([0, 2, 4,], 1/16)
 
 mod = .1
 
-relax2.connect(d13, .3)
 relax.note(1)
 
 relax2.note.seq(1.2, 2)
@@ -413,23 +418,24 @@ s.frequency.fade(200,0,2)
 changes.note(1)
 
 acid.stop()
-resetHydra()
 webgl.reset()
 webgl.noStroke()
 flowerNo = 0
 hdriNo = 0
 soundNo = 0
 ambiences[soundNo].note(1)
+hdriTimer = 13000
+hdriNextChange = hdriTimer
 draw = function(){
-	if(frameCount%200==0){
-	  flowerNo = rndi(flowers.length-1)
+	if(frameCount%200 == 0){
+	  flowerNo++
+		if(flowerNo>8) flowerNo = 0 
 	}
-	if(frameCount%700==0){
-	  ambiences[soundNo].gain.fade(1,0,1)
-	  hdriNo = soundNo = soundNo + 1
-	  if(soundNo>8){ soundNo = 0; hdriNo = 0 }
+	if(millis() > hdriNextChange){
+		hdriNo = soundNo = soundNo + 1
+		if(soundNo>8){ soundNo = 0; hdriNo = 0 }
 		ambiences[soundNo].note(1)
-    ambiences[soundNo].gain.fade(0,1,1)
+    hdriNextChange = millis() + hdriTimer
 	}
 	webgl.clear()
 	webgl.texture(hdri[hdriNo])
@@ -446,14 +452,16 @@ draw = function(){
 	
 	image(webgl, width/2, height/2)
 }
-
-src(s0).modulate(src(s1),0).out();
+src(s0).modulate(src(s1),.02).scale(1.1).out();
 
 webgl.rotateX(1)
+
+productive.note(.9)
 
 ////////////////////////////////////
 //14 technosexual
 ////////////////////////////////////
+// Ctrl+Enter
 div = 1
 vid = loadVideo("http://127.0.0.1:8080/technosexual/vid" + 1 + ".mp4")
 texts = ['PRODUCE', 'CUM', 'FUCK', 'PROGRESS', 'MACHINE']
@@ -462,78 +470,137 @@ webgl.reset()
 fill(255,0,0)
 pg.fill(255,0,0)
 pg.imageMode(CORNER)
-currentVideo = 1
+currentVideo = 0
+resetHydra()
+tsTimer = 8000
+tsNextChange = tsTimer
 draw = function(){  
-  if(frameCount%200 == 0){
-    currentVideo += 1
-    if(currentVideo > 6) currentVideo = 0
-    vid = loadVideo("http://127.0.0.1:8080/technosexual/vid" + currentVideo + ".mp4")
-  }
-  
-  for(i=0;i<div*div;i++){
-    rows = div
-    row = int(i/rows)
-    column = int(i%rows)
-    pg.image(vid, width/div*column, height/div*row, width/div, height/div);
-  }
-  pixelEffect(vid, true)
-  if(k.out()>.7){
-    iText += 1
-    if(iText>texts.length-1){
-      iText = 0
-    }
-  }
+	if(millis() > tsNextChange){
+	  currentVideo += 1
+	  if(currentVideo > 6) currentVideo = 0
+	  vid = loadVideo("http://127.0.0.1:8080/technosexual/vid" + currentVideo + ".mp4")
+    tsNextChange = millis() + tsTimer
+	}
+	for(i=0;i<div*div;i++){
+	  rows = div
+	  row = int(i/rows)
+	  column = int(i%rows)
+	  pg.image(vid, width/div*column, height/div*row, width/div, height/div);
+	}
+	pixelEffect(vid, true)
+	if(k.out()>.7){
+	  iText += 1
+	  if(iText>texts.length-1){
+	    iText = 0
+	  }
+	}
 	pg.text(texts[iText], pg.width/2, pg.height/2)
   
-  webgl.clear()
-  webgl.texture(pg)
-  
-  webgl.push()
-  webgl.translate(width/4, height/4, 0)
-  webgl.rotateY(frameCount/50)
-  webgl.box(width/8)
-  webgl.pop()
-  
-  webgl.push()
-  webgl.translate(-width/4, height/4, 0)
-  webgl.rotateX(frameCount/50)
-  webgl.box(width/8)
-  webgl.pop()
-  
-  webgl.push()
-  webgl.translate(width/4, -height/4, 0)
-  webgl.rotateX(frameCount/50)
-  webgl.box(width/8)
-  webgl.pop()
-  
-  webgl.push()
-  webgl.translate(-width/4, -height/4, 0)
-  webgl.rotateX(frameCount/50)
-  webgl.box(width/8)
-  webgl.pop()
-  
-  webgl.rotateY(0.01)
-  
-  image(pg,width/2,height/2)
-  image(webgl,width/2, height/2)
+	webgl.clear()
+	webgl.texture(pg)
+	webgl.push()
+	webgl.translate(width/4, height/4, 0)
+	webgl.rotateY(frameCount/50)
+	webgl.box(width/8)
+	webgl.pop()
+	webgl.push()
+	webgl.translate(-width/4, height/4, 0)
+	webgl.rotateX(frameCount/50)
+	webgl.box(width/8)
+	webgl.pop()
+	webgl.push()
+	webgl.translate(width/4, -height/4, 0)
+	webgl.rotateX(frameCount/50)
+	webgl.box(width/8)
+	webgl.pop()
+	webgl.push()
+	webgl.translate(-width/4, -height/4, 0)
+	webgl.rotateX(frameCount/50)
+	webgl.box(width/8)
+	webgl.pop()
+	webgl.rotateY(0.01)
+	image(pg,width/2,height/2)
+	image(webgl,width/2, height/2)
   
 	text(texts[iText], pg.width/2, pg.height/2)
+
+	fadeFunc()
 }
-k.note.seq( 1, 1/4 )
-hh = Hat()
-
-productive.note(.9)
-
+hh = Hat({decay: 1/32})
 hh.trigger.seq( 1, 1/16 )
-
-sex.note(.8)
-
-technosexual.note(1)
-technosexual.fadeout()
-
-pix = 120
-div = 2
 
 k.note(1)
 
+k.note.seq( 1, 1/4 )
+div = 2
+pix = 30
+
+div = 3
+sex.note(.8)
+
+div = 4
+
+div = 6
+pix = 120
 rave.note.seq( 1, 4 )
+
+div = 15
+oh = Hat({ decay: 1/8, gain: .7 }).seq( [0,.2,1,0], 1/16 )
+
+div = 8
+pix = 0
+k.stop()
+hh.stop()
+oh.stop()
+rave.gain = 0
+productive.gain = 0
+sex.gain = 0
+technosexual.note(1)
+
+k.note(1)
+
+iFade = 1
+
+////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// many thanks to the Jobcenter and ALG2 for making this possible <3
+// 😁😅😜
+////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////

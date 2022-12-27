@@ -91,7 +91,7 @@ drawRays = function(w, h, x) {
   }
 }
 scale = fibs[fibs.length-5]/fibs[fibs.length-1]
-fiboDicks = function(){
+fiboDicks = function(one, two, three){
     push()
     for (let i = 0; i < fibs.length; i++) {
       scaledFib = fibs[i]*scale
@@ -99,13 +99,13 @@ fiboDicks = function(){
       
       push()
       rotate(-155)
-      image(dildo, -scaledFib/2, -scaledFib/2, scaledFib, scaledFib)
+      if(one) image(dildo, -scaledFib/2, -scaledFib/2, scaledFib, scaledFib)
       
       rotate(-155)
-      image(dildo, scaledFib, -scaledFib/2, scaledFib, scaledFib)
+      if(two) image(dildo, scaledFib, -scaledFib/2, scaledFib, scaledFib)
       
       rotate(-155)
-      image(dildo, -scaledFib/2, -scaledFib/2, scaledFib, scaledFib)
+      if(three) image(dildo, -scaledFib/2, -scaledFib/2, scaledFib, scaledFib)
       pop()  
       
       translate(scaledFib, scaledFib)
@@ -172,7 +172,7 @@ b = FM[2]("deepbass", { attack: 0.001, decay: 1/8, gain:1 }).connect(r, 0.1);
 draw = function () {
   image(porn, width/2, height/2, width, height);
 };
-src(o0).scale(1.005).blend(src(o1), ()=>1.5-b.out(8)).out();
+src(o0).scale(1.005).blend(src(o1), ()=>1.5-b.out(5)).out();
 
 b.note.seq((bp = [-25]), 1/8);
 perc.stop()
@@ -180,12 +180,10 @@ ginsberg.fx.add(dS)
 dS.time.seq([1/2, 1/4, 1/64, 1/128, 1/8, 1/1000], 2)
 
 bp.transpose.seq([1], 4)
-ginsberg.fadeout()
-
 s.frequency.fade(10,1000,32)
 s.gain.fade(0,.5,32)
-src(o0).scale(1.04).hue(0.1).blend(src(o1), ()=>0.2+b.out(10+s.out(100))).out();
 
+src(o0).scale(1.04).hue(0.1).blend(src(o1), ()=>0.2+b.out(10+s.out(100))).out();
 
 ////////////////////////////////////
 //03 orgy
@@ -193,6 +191,7 @@ src(o0).scale(1.04).hue(0.1).blend(src(o1), ()=>0.2+b.out(10+s.out(100))).out();
 s.disconnect()
 perc.stop()
 b.stop()
+ginsberg.gain = 0
 s = Synth("bleep").connect(r, 0.5);
 s.note.seq( (notes = [0, -3, -14, 1, -10, -4, 13, -6]), [1,1/2,1/4,1/12,1/16].rnd() );
 background(rndi(200, 255), rndi(155, 255), rndi(255));
@@ -257,6 +256,8 @@ statik = loadVideo('http://127.0.0.1:8080/static.mp4')
 b = Monosynth("short.dry", {decay: .1});
 b.note.seq( [-20, -20, -20, -20, -21], 1/8 );
 b.loudness.seq( [1, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2], 1/8 );
+s = Synth("bleep", { decay: 1/16, gain: .7 }).connect(r, .5)
+hh = Hat({ gain: 0.1, tune: 0.7 }).connect(r, .3)
 
 resetHydra()
 draw = function() {
@@ -271,11 +272,9 @@ osc(6,0.03,2).out(o2);
 canvas.style.display = "none";
 src(o0).modulateHue(src(o0).scale(1.002).kaleid(10),100).blend(src(o1), ()=>1-b.out(10)).blend(src(o2),.02).out()
 
-s = Synth("bleep", { decay: 1/16, gain: .7 }).connect(r, .5)
 s.loudness.seq([1, 0.05, 0.05, 0.05, 0.05, 0.2, 0.1, 0.1], 1/16)
 s.note.seq([0, 2, 4, 5, 8], 1/16)
 
-hh = Hat({ gain: 0.1, tune: 0.7 }).connect(r, .3)
 hh.gain.seq([0.2, 0.2, 0.2, 0.2, 0.4, 0.2].rnd(), 1/16);
 hh.trigger.seq(1, 1/16);
 hh.fx.add(dS);
@@ -316,25 +315,33 @@ colors[1] = colors[1].map((c)=>c+10)
 ////////////////////////////////////
 drone.note(1)
 drone.fadein()
-speed = 1.008
+speed = 1.004
 choir1.stop()
 choir2.stop()
 choir3.stop()
 s = Sine({ frequency: 1000, gain:0 }).connect()
 
 draw = function() {
-  n = map(p5.noise(frameCount*0.008),0,1,-1,1)
+  n = map(p5.noise(frameCount*0.008),0,1,-1,1.2)
   translate(width/2+100*n, height/2+100*n)
-  fiboDicks(false, true, false)
+  fiboDicks(true, true, true)
   rotate(frameCount*0.1)
-  //face()
+  face()
 }
 
 heaven.trigger(1)
 
-s.gain.fade(0, .3, 32)
+s.gain.fade(0, .3, 16)
 canvas.style.display = "none";
-src(o0).scale(1.0).blend(src(o1), ()=>1+s.out(40)).out();
+src(o0).scale(1.0).blend(src(o1), ()=>1+s.out(10)).out();
+
+s.gain.fade(.3,0,16)
+clouds = loadVideo("http://127.0.0.1:8080/clouds.mp4")
+fade = 0
+draw = function() {
+  tint(255,fade)
+  fade += 0.01
+  image(clouds, width/2, height/2, width, height);
+}
 
 drone.fadeout()
-s.gain.fade(.3,0,16)
