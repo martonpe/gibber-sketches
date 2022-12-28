@@ -5,15 +5,12 @@ for (i = 0; i < 9; i++) {
 }
 moan =  Sampler({
     files: moans,
-    gain: .5
+    gain: .4
 })
 choir1 = Sampler("http://127.0.0.1:8080/choir1.mp3", { gain: .5 })
 choir2 = Sampler("http://127.0.0.1:8080/choir2.mp3", { gain: .5 })
 choir3 = Sampler("http://127.0.0.1:8080/choir3.mp3", { gain: .5 })
 drone = Sampler('http://127.0.0.1:8080/drone1.mp3', { loops: true })
-losing1 = Sampler('http://127.0.0.1:8080/losing.mp3', { loops: true, gain: 1.5})
-losing2 = Sampler('http://127.0.0.1:8080/losing2.mp3', { loops: true, gain: 2})
-productive = Sampler('http://127.0.0.1:8080/technosexual/productive.mp3', { loops: true, gain: 2 })
 // the long ones
 ginsberg = Sampler('http://127.0.0.1:8080/ginsberg.mp3', { gain: 3 })
 heaven = Sampler('http://127.0.0.1:8080/heaven.mp3', { gain: 1.5 })
@@ -164,11 +161,12 @@ ginsberg.note(1)
 ///////////////////////////////////////
 //02 yes, master
 ////////////////////////////////////
-porn = loadVideo("http://127.0.0.1:8080/porn1.mp4")
+porn = loadVideo("http://127.0.0.1:8080/porn2.mp4")
 f = FM("glockenspiel", { decay: 1 / 16, gain: .7 }).connect(d13,1), connect(r,1)
 s = Sine({ frequency: 100, gain:0 })
+
 s.connect()
-b = FM[2]("deepbass", { attack: 0.001, decay: 1/8, gain:1 }).connect(r, 0.1);
+b = FM[2]("deepbass", { attack: 0.001, decay: 1/8, gain: 1 }).connect(r, 0.1);
 draw = function () {
   image(porn, width/2, height/2, width, height);
 };
@@ -253,11 +251,12 @@ src(o0).modulateHue(src(s0).rotate(() => time%1060).diff(s0),()=>moan.out(110)).
 //05 fist the system
 ////////////////////////////////////
 statik = loadVideo('http://127.0.0.1:8080/static.mp4')
-b = Monosynth("short.dry", {decay: .1});
+b = Monosynth("short.dry", { decay: .1, gain: .7 });
 b.note.seq( [-20, -20, -20, -20, -21], 1/8 );
 b.loudness.seq( [1, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2], 1/8 );
 s = Synth("bleep", { decay: 1/16, gain: .7 }).connect(r, .5)
 hh = Hat({ gain: 0.1, tune: 0.7 }).connect(r, .3)
+moan.stop()
 
 resetHydra()
 draw = function() {
@@ -324,9 +323,9 @@ s = Sine({ frequency: 1000, gain:0 }).connect()
 draw = function() {
   n = map(p5.noise(frameCount*0.008),0,1,-1,1.2)
   translate(width/2+100*n, height/2+100*n)
-  fiboDicks(true, true, true)
+  fiboDicks(false, true, false)
   rotate(frameCount*0.1)
-  face()
+  //face()
 }
 
 heaven.trigger(1)

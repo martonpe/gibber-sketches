@@ -4,7 +4,6 @@ for (i = 0; i < 9; i++) {
     ambiences[i] = Sampler("http://127.0.0.1:8080/hdri/" + i + ".wav")
 }
 drone = Sampler('http://127.0.0.1:8080/drone1.mp3', { loops: true })
-rave = Sampler('http://127.0.0.1:8080/technosexual/rave2.mp3',  { gain: 1.5 })
 k = Sampler('http://127.0.0.1:8080/technosexual/kick1.mp3')
 spacetime = Sampler("http://127.0.0.1:8080/spacetime.mp3", { loops: true, gain: 3 });
 loop92 = Sampler('http://127.0.0.1:8080/metatron/92.wav', { gain: 3 })
@@ -22,7 +21,7 @@ relax2 = Sampler('http://127.0.0.1:8080/relax3.mp3', { gain: 3 })
 relax3 = Sampler('http://127.0.0.1:8080/relax4.mp3', { gain: 3 })
 relax4 = Sampler('http://127.0.0.1:8080/relax5.mp3', { gain: 3 })
 // the long ones
-changes = Sampler('http://127.0.0.1:8080/changes.mp3', { gain: 2.5})
+changes = Sampler('http://127.0.0.1:8080/changes.mp3', { gain: 3})
  
  
 //EFFECTS
@@ -36,7 +35,7 @@ spacetime.connect(d38, 0.8);
 drone.connect(r);
 losing1.connect(r)
 technosexual.connect(r, .1)
-productive.connect(d38, 0.1).connect(r, .3)
+productive.connect(d38, 0.1).connect(r, .1)
  
  
 //IMAGES
@@ -238,7 +237,7 @@ loop92.note.seq(1, 4, 0)
 drone.fadeout()
 spacetime.gain = 0
 f.stop()
-p.stop()
+
 words = ['EXTASY', 'DREAM', 'ETERNITY']
 wordNo = 0
 resetHydra()
@@ -281,21 +280,20 @@ loop93.note.seq(1, 4)
 
 loop92.fadeout()
 loop93.fadeout()
+s.stop()
 
 ////////////////////////////////////
 //10 interstellar worm
 ////////////////////////////////////
-f = FM[5]("frog", {decay: 1/4, cmRatio: .9}).connect(r,.5)
-f.gain.fade(0.5,1,24)
+f = FM[5]("frog", {decay: 1/4, cmRatio: .9, gain: .5}).connect(r,.5)
 f.note.seq([-10, -5, 2, -20, -13], [1,1/2, 1/8].rnd());
 stroke(0)
-
 draw = function () {
     x = map(noise(frameCount * .004),0,1,-200, width+300)
     y = map(noise(frameCount * .006),0,1,-200, height+300)
     translate(x, y);
     fill(255)
-    b = f.out(200);
+    b = f.out(300);
     rect(b * -0.5, b * -0.5, b, b);
   }
 
@@ -307,7 +305,7 @@ draw = function () {
   x = map(noise(frameCount * .004),0,1,-200, width+300)
   y = map(noise(frameCount * .006),0,1,-200, height+300)
   translate(x, y);
-  const b = 3 + f.out(150);
+  const b = 3 + f.out(300);
   if(frameCount%2000>1000){
     f.cmRatio = .99
   	ellipse(0,0,b);
@@ -405,7 +403,7 @@ relax4.note.seq(1.5, 2, 0, 1.5)
 
 relax2.stop()
 
-s = Sine({frequency: 100, gain:.5}).connect()
+s = Sine({frequency: 10, gain:.5}).connect()
 s.frequency.fade(10,200,32)
 
 ////////////////////////////////////
@@ -452,7 +450,7 @@ draw = function(){
 	
 	image(webgl, width/2, height/2)
 }
-src(s0).modulate(src(s1),.02).scale(1.1).out();
+src(s0).modulate(src(s1),.0).scale(1.1).out();
 
 webgl.rotateX(1)
 
@@ -523,7 +521,7 @@ draw = function(){
 	image(webgl,width/2, height/2)
   
 	text(texts[iText], pg.width/2, pg.height/2)
-
+    
 	fadeFunc()
 }
 hh = Hat({decay: 1/32})
@@ -570,7 +568,7 @@ iFade = 1
 
 
 
-
+// THE END
 
 
 
