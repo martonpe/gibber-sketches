@@ -105,8 +105,8 @@ pg.textFont(font)
 textFont(font)
 pg.textAlign(CENTER, CENTER)
 textAlign(CENTER, CENTER)
-pg.textSize(250)
-textSize(250)
+pg.textSize(220)
+textSize(220)
 fill(255,0,0)
 fade = 0
 iFade = 0
@@ -199,7 +199,7 @@ fragShader = `
 //08 cloud drone
 ////////////////////////////////////
 drone.note(1)
-drone.gain.fade(0,1,12)
+drone.gain.fade(0,1,10)
 
 draw = function () {
   webgl.clear();
@@ -286,6 +286,7 @@ s.stop()
 //10 interstellar worm
 ////////////////////////////////////
 f = FM[5]("frog", {decay: 1/4, cmRatio: .9, gain: .5}).connect(r,.5)
+
 f.note.seq([-10, -5, 2, -20, -13], [1,1/2, 1/8].rnd());
 stroke(0)
 draw = function () {
@@ -324,7 +325,7 @@ draw = function () {
 s2.initScreen();
 f.stop()
 resetHydra()
-s = Synth('blank', { waveform:'square' }).note.seq( 12, 1 )
+s = Synth('blank', { waveform:'square', gain: .15 }).note.seq( 12, 1 )
 s.connect(r, 1).connect(d38, .1)
 src(s2).kaleid(2).out();
 pg.reset()
@@ -543,7 +544,7 @@ pix = 120
 rave.note.seq( 1, 4 )
 
 div = 15
-oh = Hat({ decay: 1/8, gain: .7 }).seq( [0,.2,1,0], 1/16 )
+oh = Hat({ decay: 1/8, gain: 2 }).seq( [0,.2,1,0], 1/16 )
 
 div = 8
 pix = 0

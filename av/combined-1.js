@@ -5,7 +5,7 @@ for (i = 0; i < 9; i++) {
 }
 moan =  Sampler({
     files: moans,
-    gain: .4
+    gain: .3
 })
 choir1 = Sampler("http://127.0.0.1:8080/choir1.mp3", { gain: .5 })
 choir2 = Sampler("http://127.0.0.1:8080/choir2.mp3", { gain: .5 })
@@ -28,7 +28,7 @@ ginsberg.connect(r, .1)
 choir1.connect(r)
 choir2.connect(r)
 choir3.connect(r)
-moan.connect(d38, .6).connect(r, 1)
+moan.connect(d38, .3).connect(r, .2)
  
  
 //IMAGES
@@ -220,7 +220,6 @@ draw = function () {
 //04 moaning flowers 👼🌸🌹🌼
 ////////////////////////////////////
 s.stop()
-moan.connect(d38, .6).connect(r, 1)
 moan.pick.seq( Rndi(0,9) )
 moan.note.seq( [1,.75, 1.2,1.25,1.3].rnd(), [2,1.5,1,1/2,1/4,1/12,1/16].rnd() )
 background(rndi(200, 255), rndi(155, 255), rndi(255));
@@ -279,7 +278,7 @@ hh.trigger.seq(1, 1/16);
 hh.fx.add(dS);
 dS.time = 1/10000;
 
-dS.time.seq([1/2, 1/10000, 1/4, 1/8, 1/1000, 1/128], [1,2].rnd())
+dS.time.seq([1/2, 1/10000, 1/4, 1/8, 1/1000], [1,2].rnd())
 
 ////////////////////////////////////
 //06 tunnel to heaven
