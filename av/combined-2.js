@@ -3,7 +3,7 @@ ambiences = [];
 for (i = 0; i < 9; i++) {
     ambiences[i] = Sampler("http://127.0.0.1:8080/hdri/" + i + ".wav")
 }
-drone = Sampler('http://127.0.0.1:8080/drone1.mp3', { loops: true })
+drone = Sampler('http://127.0.0.1:8080/drone1.mp3', { loops: true, gain: .5 })
 k = Sampler('http://127.0.0.1:8080/technosexual/kick1.mp3')
 spacetime = Sampler("http://127.0.0.1:8080/spacetime.mp3", { loops: true, gain: 3 });
 loop92 = Sampler('http://127.0.0.1:8080/metatron/92.wav', { gain: 3 })
@@ -27,15 +27,14 @@ changes = Sampler('http://127.0.0.1:8080/changes.mp3', { gain: 3})
 //EFFECTS
 rs = Reverb({roomSize: .2} ).bus()
 r = Reverb('space').bus()
-d13 = Delay( '1/3' ).bus().connect( r, .5 )
-d38 = Delay({ time: 3/8 }).bus().connect(r, .5);
+d13 = Delay( '1/3' ).bus().connect( r, .3 )
+d38 = Delay({ time: 3/8 }).bus().connect(r, .3);
 dS = Delay({time:1/100000, feedback: .9, })
  
 spacetime.connect(d38, 0.8);
-drone.connect(r);
 losing1.connect(r)
-technosexual.connect(r, .1)
-productive.connect(d38, 0.1).connect(r, .1)
+technosexual.connect(r, .07)
+productive.connect(d38, 0.1)
  
  
 //IMAGES
@@ -199,7 +198,7 @@ fragShader = `
 //08 cloud drone
 ////////////////////////////////////
 drone.note(1)
-drone.gain.fade(0,1,10)
+drone.fadein(10)
 
 draw = function () {
   webgl.clear();
@@ -217,11 +216,11 @@ osc(6, 0.03, 2).out(o1);
 src(s0).out(o2);
 src(o0).modulateHue(src(o0).scale(1.002).kaleid(10), 100).blend(src(o2), () => 1 - (spacetime.out(5))).blend(src(o1), 0.02).out();
 
-f = FM[5]("bass", { decay: 3, attack: 1, gain: .1 }).connect(d38, 0.3).connect(r, 1)
+f = FM[5]("bass", { decay: 3, attack: 1, gain: .1 }).connect(d38, 0.3).connect(r, .5)
 f.note.seq([4, 0, -3, 4, 11], [3, 2, 1/8].rnd());
 
 s = Synth("bleep", { decay: 1/8, attack: 1/24, glide: 2000 }).connect(d38, 0.7);
-s.seq((pp = [0, 2, -8, 14]), [1 / 8, 1, 2, 1/16, 1/16].rnd());
+s.seq((pp = [0, 2, -8, 14]), [1/8, 1, 2, 1/16, 1/16].rnd());
 pp.transpose.seq([12, -12, -12, 12], 4);
 
 spacetime.note(-1);
@@ -285,7 +284,7 @@ s.stop()
 ////////////////////////////////////
 //10 interstellar worm
 ////////////////////////////////////
-f = FM[5]("frog", {decay: 1/4, cmRatio: .9, gain: .5}).connect(r,.5)
+f = FM[5]("frog", {decay: 1/4, cmRatio: .9, gain: .3}).connect(r,.3)
 
 f.note.seq([-10, -5, 2, -20, -13], [1,1/2, 1/8].rnd());
 stroke(0)
@@ -326,7 +325,7 @@ s2.initScreen();
 f.stop()
 resetHydra()
 s = Synth('blank', { waveform:'square', gain: .15 }).note.seq( 12, 1 )
-s.connect(r, 1).connect(d38, .1)
+s.connect(r, .5).connect(d38, .1)
 src(s2).kaleid(2).out();
 pg.reset()
 webgl.reset()
@@ -372,7 +371,7 @@ losing2.fadeout()
 //12 acid glitch
 ////////////////////////////////////
 acid.note.seq(1,1)
-hh = Hat({ gain: 0.1, tune: 0.7 }).connect(r, .3)
+hh = Hat({ tune: 0.7 }).connect(r, .1)
 canvas.style.display = "none";
 mod = .05
 draw = function () {
@@ -390,7 +389,7 @@ hh.trigger.seq(1, 1/16);
 hh.fx.add(dS);
 dS.time = 1/10000;
 
-s = Synth('chirp', { decay: 1/16, gain: 1 }).connect(r, .5)
+s = Synth('chirp', { decay: 1/16, gain: 1 }).connect(r, .3)
 s.loudness.seq([1, 0.5, 0.5, 1, 0.05, 0.2, 1, 0.1], 1/16)
 s.note.seq([0, 2, 4,], 1/16)
 

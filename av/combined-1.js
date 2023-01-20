@@ -10,7 +10,7 @@ moan =  Sampler({
 choir1 = Sampler("http://127.0.0.1:8080/choir1.mp3", { gain: .5 })
 choir2 = Sampler("http://127.0.0.1:8080/choir2.mp3", { gain: .5 })
 choir3 = Sampler("http://127.0.0.1:8080/choir3.mp3", { gain: .5 })
-drone = Sampler('http://127.0.0.1:8080/drone1.mp3', { loops: true })
+drone = Sampler('http://127.0.0.1:8080/drone1.mp3', { loops: true, gain: .5 })
 // the long ones
 ginsberg = Sampler('http://127.0.0.1:8080/ginsberg.mp3', { gain: 3 })
 heaven = Sampler('http://127.0.0.1:8080/heaven.mp3', { gain: 1.5 })
@@ -19,16 +19,15 @@ heaven = Sampler('http://127.0.0.1:8080/heaven.mp3', { gain: 1.5 })
 //EFFECTS
 rs = Reverb({roomSize: .2} ).bus()
 r = Reverb('space').bus()
-d13 = Delay( '1/3' ).bus().connect( r, .5 )
-d38 = Delay({ time: 3/8 }).bus().connect(r, .5);
+d13 = Delay( '1/3' ).bus().connect( r, .3 )
+d38 = Delay({ time: 3/8 }).bus().connect(r, .3);
 dS = Delay({ time:1/100000, feedback: .9, wetdry: .6 })
  
-drone.connect(r)
 ginsberg.connect(r, .1)
 choir1.connect(r)
 choir2.connect(r)
 choir3.connect(r)
-moan.connect(d38, .3).connect(r, .2)
+moan.connect(d38, .2).connect(r, .1)
  
  
 //IMAGES
@@ -150,10 +149,9 @@ face = function(){
 ////////////////////////////////////
 
 
-perc = FM( 'perc').connect( d13, .5 ).connect(r,.5)
-perc.note.seq( sine( btof(7),7,7 )        , 1/2, 2 )
+perc = FM( 'perc').connect( d13, .5 ).connect(r,.3)
+perc.note.seq( sine( btof(7),7,7 ) , 1/2, 2 )
 
-perc.connect(r,.5)
 ginsberg.note(1)
 
 
@@ -162,11 +160,10 @@ ginsberg.note(1)
 //02 yes, master
 ////////////////////////////////////
 porn = loadVideo("http://127.0.0.1:8080/porn2.mp4")
-f = FM("glockenspiel", { decay: 1 / 16, gain: .7 }).connect(d13,1), connect(r,1)
 s = Sine({ frequency: 100, gain:0 })
 
 s.connect()
-b = FM[2]("deepbass", { attack: 0.001, decay: 1/8, gain: 1 }).connect(r, 0.1);
+b = FM[2]("deepbass", { attack: 0.001, decay: 1/8, gain: 1 });
 draw = function () {
   image(porn, width/2, height/2, width, height);
 };
@@ -181,7 +178,7 @@ bp.transpose.seq([1], 4)
 s.frequency.fade(10,1000,32)
 s.gain.fade(0,.5,32)
 
-src(o0).scale(1.04).hue(0.1).blend(src(o1), ()=>0.2+b.out(10+s.out(100))).out();
+src(o0).scale(1.04).hue(0.1).blend(src(o1), ()=>0.2+b.out(10+s.out(70))).out();
 
 ////////////////////////////////////
 //03 orgy
@@ -190,7 +187,7 @@ s.disconnect()
 perc.stop()
 b.stop()
 ginsberg.gain = 0
-s = Synth("bleep").connect(r, 0.5);
+s = Synth("bleep").connect(r, .3);
 s.note.seq( (notes = [0, -3, -14, 1, -10, -4, 13, -6]), [1,1/2,1/4,1/12,1/16].rnd() );
 background(rndi(200, 255), rndi(155, 255), rndi(255));
 resetHydra()
@@ -253,8 +250,8 @@ statik = loadVideo('http://127.0.0.1:8080/static.mp4')
 b = Monosynth("short.dry", { decay: .1, gain: .7 });
 b.note.seq( [-20, -20, -20, -20, -21], 1/8 );
 b.loudness.seq( [1, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2], 1/8 );
-s = Synth("bleep", { decay: 1/16, gain: .7 }).connect(r, .5)
-hh = Hat({ gain: 0.1, tune: 0.7 }).connect(r, .3)
+s = Synth("bleep", { decay: 1/16, gain: .7 }).connect(r, .3)
+hh = Hat({ loudness: 0.7, tune: 0.7 }).connect(r, .1)
 moan.stop()
 
 resetHydra()
